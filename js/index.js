@@ -1,9 +1,12 @@
 import {Ajax} from "../../Core/js/ajax";
 
-document.querySelectorAll('.loginForm').foreach(x => x.addEventListener('submit', async e => {
+document.querySelectorAll('.loginForm').forEach(x => x.addEventListener('submit', async e => {
     e.preventDefault();
     try {
-        let data = await Ajax.Authorization.login();
+        var form = document.querySelector('.loginForm');
+        let data = await Ajax.Authorization.login(form.username.value, form.password.value);
     } catch (ex) {
+        form.querySelector('.error').textContent = 'Błąd';
+        form.querySelector('.error').classList.remove('hidden');
     }
 }));

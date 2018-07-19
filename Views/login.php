@@ -3,9 +3,10 @@
         <header>
             <h1>Logowanie</h1>
         </header>
+        <div class="error hidden"></div>
         <label>
             <span>Email</span>
-            <input name="main">
+            <input name="username">
         </label>
         <label>
             <span>Hasło</span>

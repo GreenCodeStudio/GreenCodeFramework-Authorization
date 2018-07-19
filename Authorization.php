@@ -16,14 +16,15 @@ class Authorization
     static public function login(string $username, string $password)
     {
         $user = new \User\User();
-        $userData = (\stdClass)$user->getByUsername($username);
-        if ($userData != null) {
+        $userDataArr = $user->getByUsername($username);
+        if (!empty($userDataArr)) {
+            $userData = (object)$userDataArr;
             if (static::checkPassword($userData, $password)) {
                 $token = static::generateToken();
                 $directory = __DIR__.'/../../tmp';
                 mkdir($directory, 0777, true);
                 $file = $directory.'/'.$token.'user';
-                file_put_contents($file, serialize($directory));
+                file_put_contents($file, serialize($userData));
                 setcookie('login', $token);
             } else {
                 throw new Exceptions\BadAuthorizationException();
@@ -46,6 +47,6 @@ class Authorization
 
     private static function generateToken()
     {
-return bin2hex(openssl_random_pseudo_bytes(16));
+        return bin2hex(openssl_random_pseudo_bytes(16));
     }
 }
