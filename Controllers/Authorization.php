@@ -15,6 +15,7 @@ class Authorization extends \Common\PageStandardController
     {
         $this->addView('Authorization', 'login');
     }
+
     public function postAction()
     {
         require __DIR__.'/../Views/loginTemplate.php';
