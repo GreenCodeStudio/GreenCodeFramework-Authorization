@@ -24,7 +24,8 @@ class Authorization
                 $token = static::generateToken();
                 $file = self::getUserFilePath($token, true);
                 file_put_contents($file, serialize($userData));
-                setcookie('login', $token);
+                setcookie('login', $token, (int)(time()*2),'/');
+                exit;
             } else {
                 throw new Exceptions\BadAuthorizationException();
 
@@ -39,7 +40,7 @@ class Authorization
         return $userData->password === self::hashPassword($password, $userData->salt);
     }
 
-    private static function hashPassword(string $password, string $salt)
+    public static function hashPassword(string $password, string $salt)
     {
         return hash('sha512', hash('sha512', $password).$salt.static::salt);
     }
@@ -48,11 +49,15 @@ class Authorization
     {
         return bin2hex(openssl_random_pseudo_bytes(16));
     }
+    public static function generateSalt()
+{
+    return bin2hex(openssl_random_pseudo_bytes(16));
+}
 
     private static function getUserFilePath($token, bool $mkdir = false)
     {
         $directory = __DIR__.'/../../tmp';
-        if ($mkdir)
+        if ($mkdir && !is_dir($directory))
             mkdir($directory, 0777, true);
         return $directory.'/'.$token.'user';
     }
@@ -63,8 +68,9 @@ class Authorization
             return false;
         $token = $_COOKIE['login'];
         if (self::$userData == null) {
-            self::$userData = unserialize(file_get_contents(self::getUserFilePath($token)))
+            self::$userData = unserialize(file_get_contents(self::getUserFilePath($token)));
         }
-        return false;
+        if (!empty(self::$userData))
+            return true;
     }
 }
