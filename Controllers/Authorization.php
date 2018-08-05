@@ -20,4 +20,9 @@ class Authorization extends \Common\PageStandardController
     {
         require __DIR__.'/../Views/loginTemplate.php';
     }
+
+    public function hasPermission()
+    {
+        return true;
+    }
 }

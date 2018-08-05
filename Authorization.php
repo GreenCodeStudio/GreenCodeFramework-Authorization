@@ -12,6 +12,7 @@ namespace Authorization;
 class Authorization
 {
     const salt = 'l(vu$bL2';
+    static private $userData = null;
 
     static public function login(string $username, string $password)
     {
@@ -21,9 +22,7 @@ class Authorization
             $userData = (object)$userDataArr;
             if (static::checkPassword($userData, $password)) {
                 $token = static::generateToken();
-                $directory = __DIR__.'/../../tmp';
-                mkdir($directory, 0777, true);
-                $file = $directory.'/'.$token.'user';
+                $file = self::getUserFilePath($token, true);
                 file_put_contents($file, serialize($userData));
                 setcookie('login', $token);
             } else {
@@ -48,5 +47,24 @@ class Authorization
     private static function generateToken()
     {
         return bin2hex(openssl_random_pseudo_bytes(16));
+    }
+
+    private static function getUserFilePath($token, bool $mkdir = false)
+    {
+        $directory = __DIR__.'/../../tmp';
+        if ($mkdir)
+            mkdir($directory, 0777, true);
+        return $directory.'/'.$token.'user';
+    }
+
+    static public function isLogged()
+    {
+        if (empty($_COOKIE['login']))
+            return false;
+        $token = $_COOKIE['login'];
+        if (self::$userData == null) {
+            self::$userData = unserialize(file_get_contents(self::getUserFilePath($token)))
+        }
+        return false;
     }
 }
