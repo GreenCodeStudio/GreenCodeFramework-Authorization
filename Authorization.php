@@ -13,18 +13,21 @@ class Authorization
 {
     const salt = 'l(vu$bL2';
     static private $userData = null;
+    static private $userDataReaded = false;
 
     static public function login(string $username, string $password)
     {
         $user = new \User\User();
-        $userDataArr = $user->getByUsername($username);
+        $userDataArr = $user->getByUsername($username,true);
         if (!empty($userDataArr)) {
             $userData = (object)$userDataArr;
             if (static::checkPassword($userData, $password)) {
+                unset($userData->salt);
+                unset($userData->password);
                 $token = static::generateToken();
                 $file = self::getUserFilePath($token, true);
                 file_put_contents($file, serialize($userData));
-                setcookie('login', $token, (int)(time()*2),'/');
+                setcookie('login', $token, (int)(time() * 2), '/');
                 exit;
             } else {
                 throw new Exceptions\BadAuthorizationException();
@@ -49,10 +52,6 @@ class Authorization
     {
         return bin2hex(openssl_random_pseudo_bytes(16));
     }
-    public static function generateSalt()
-{
-    return bin2hex(openssl_random_pseudo_bytes(16));
-}
 
     private static function getUserFilePath($token, bool $mkdir = false)
     {
@@ -62,15 +61,26 @@ class Authorization
         return $directory.'/'.$token.'user';
     }
 
+    public static function generateSalt()
+    {
+        return bin2hex(openssl_random_pseudo_bytes(16));
+    }
+
     static public function isLogged()
     {
-        if (empty($_COOKIE['login']))
-            return false;
-        $token = $_COOKIE['login'];
-        if (self::$userData == null) {
-            self::$userData = unserialize(file_get_contents(self::getUserFilePath($token)));
-        }
-        if (!empty(self::$userData))
+        if (!empty(self::getUserData()))
             return true;
+    }
+
+    static public function getUserData()
+    {
+        if (empty($_COOKIE['login']))
+            return null;
+        $token = $_COOKIE['login'];
+        if (!self::$userDataReaded) {
+            self::$userData = unserialize(file_get_contents(self::getUserFilePath($token)));
+            self::$userDataReaded = true;
+        }
+        return self::$userData;
     }
 }
