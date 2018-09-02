@@ -28,7 +28,6 @@ class Authorization
                 $file = self::getUserFilePath($token, true);
                 file_put_contents($file, serialize($userData));
                 setcookie('login', $token, (int)(time() * 2), '/');
-                exit;
             } else {
                 throw new Exceptions\BadAuthorizationException();
 
