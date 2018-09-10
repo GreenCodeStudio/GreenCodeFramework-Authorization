@@ -10,6 +10,8 @@
 <?php $this->showViews('main'); ?>
 <script>
     window.controllerInitInfo = <?=json_encode($this->getInitInfo())?>;
+    window.DEBUG=<?=json_encode($this->isDebug())?>;
+    window.DEBUG=<?=json_encode($this->isDebug())?>;
 </script>
 <script src="/js/main.bundle.js" type="text/javascript"></script>
 </body>
