@@ -26,6 +26,7 @@ class Authorization
                 unset($userData->password);
                 $token = static::generateToken();
                 $file = self::getUserFilePath($token, true);
+                $userData->permissions=new Permissions($userData->id);
                 file_put_contents($file, serialize($userData));
                 setcookie('login', $token, (int)(time() * 2), '/');
             } else {
