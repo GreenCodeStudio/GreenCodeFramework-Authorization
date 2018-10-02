@@ -15,7 +15,10 @@ class Authorization extends \Core\AjaxController
     {
         $logged = \Authorization\Authorization::login($username, $password);
         return $logged;
-    }
+    }  public function logout()
+{
+     \Authorization\Authorization::logout();
+}
 
     public function hasPermission()
     {

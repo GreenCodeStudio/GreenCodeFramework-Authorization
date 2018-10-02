@@ -18,7 +18,7 @@ class Authorization
     static public function login(string $username, string $password)
     {
         $user = new \User\User();
-        $userDataArr = $user->getByUsername($username,true);
+        $userDataArr = $user->getByUsername($username, true);
         if (!empty($userDataArr)) {
             $userData = (object)$userDataArr;
             if (static::checkPassword($userData, $password)) {
@@ -26,7 +26,7 @@ class Authorization
                 unset($userData->password);
                 $token = static::generateToken();
                 $file = self::getUserFilePath($token, true);
-                $userData->permissions=new Permissions($userData->id);
+                $userData->permissions = new Permissions($userData->id);
                 file_put_contents($file, serialize($userData));
                 setcookie('login', $token, (int)(time() * 2), '/');
             } else {
@@ -82,5 +82,14 @@ class Authorization
             self::$userDataReaded = true;
         }
         return self::$userData;
+    }
+
+    public static function logout()
+    {
+        if (!empty($_COOKIE['login'])) {
+            $token = $_COOKIE['login'];
+            unlink(self::getUserFilePath($token));
+        }
+        setcookie('login', NULL, 0, '/');
     }
 }
