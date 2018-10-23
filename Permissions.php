@@ -24,7 +24,7 @@ class Permissions
     {
         $data = DB::get("SELECT * FROM user_permission up WHERE id_user = ?", [$userId]);
         foreach ($data as $row) {
-            $this->data[$row['name']] = 1;
+            $this->data[$row['group']][$row['name']] = 1;
         }
     }
 
@@ -41,20 +41,26 @@ class Permissions
             if (is_file($filename)) {
                 $xml = simplexml_load_string(file_get_contents($filename));
                 foreach ($xml->group as $group) {
-                    $groups[$group->name->__toString()]=$group;
+                    $groups[$group->name->__toString()] = $group;
                     foreach ($group->permission as $permission) {
                         $data[$group->name->__toString()][$permission->name->__toString()] = $permission;
                     }
                 }
             }
         }
-        $ret=[];
-        foreach ($groups as $group){
-            $groupArray=(object)(array)$group;
+        $ret = [];
+        foreach ($groups as $group) {
+            $groupArray = (object)(array)$group;
             unset($groupArray->permission);
-            $groupArray->children=array_values($data[$group->name->__toString()]);
-            $ret[]=$groupArray;
+            $groupArray->children = array_values($data[$group->name->__toString()]);
+            $ret[] = $groupArray;
         }
         return $ret;
     }
+
+    public function can(string $group, string $permission)
+    {
+        return isset($this->data[$group]) && isset($this->data[$group][$permission]) && $this->data[$group][$permission];
+    }
+
 }

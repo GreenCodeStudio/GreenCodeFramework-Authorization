@@ -7,7 +7,7 @@ document.querySelectorAll('.loginForm').forEach(x => x.addEventListener('submit'
         let data = await Ajax.Authorization.login(form.username.value, form.password.value);
         document.location = '/';
     } catch (ex) {
-        if (ex.type == "Authorization\\Exceptions\\BadAuthorizationException")
+        if (ex.type === "Authorization\\Exceptions\\BadAuthorizationException")
             form.querySelector('.error').textContent = 'Zły login lub hasło';
         else
             form.querySelector('.error').textContent = 'Błąd';
