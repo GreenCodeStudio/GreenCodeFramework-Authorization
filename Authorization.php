@@ -17,8 +17,8 @@ class Authorization
 
     static public function login(string $username, string $password)
     {
-        $user = new \User\User();
-        $userDataArr = $user->getByUsername($username, true);
+        $userDB = new \User\DB\UserDB();
+        $userDataArr = $userDB->getByUsername($username, true);
         if (!empty($userDataArr)) {
             $userData = (object)$userDataArr;
             if (static::checkPassword($userData, $password)) {
