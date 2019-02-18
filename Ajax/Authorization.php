@@ -9,7 +9,7 @@
 namespace Authorization\Ajax;
 
 
-class Authorization extends \Core\AjaxController
+class Authorization extends \Common\PageAjaxController
 {
     public function login(string $username, string $password)
     {
