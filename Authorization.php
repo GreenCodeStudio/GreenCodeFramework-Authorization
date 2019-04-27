@@ -78,7 +78,11 @@ class Authorization
             return null;
         $token = $_COOKIE['login'];
         if (!self::$userDataReaded) {
-            self::$userData = unserialize(file_get_contents(self::getUserFilePath($token)));
+            $path = self::getUserFilePath($token);
+            if (file_exists($path))
+                self::$userData = unserialize(file_get_contents($path));
+            else
+                self::$userData = null;
             self::$userDataReaded = true;
         }
         return self::$userData;
