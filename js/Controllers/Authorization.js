@@ -6,7 +6,7 @@ export default class {
             e.preventDefault();
             try {
                 var form = document.querySelector('.loginForm');
-                let data = await Ajax.Authorization.login(form.username.value, form.password.value);
+                await Ajax.Authorization.login(form.username.value, form.password.value);
                 document.location = '/';
             } catch (ex) {
                 if (ex.type === "Authorization\\Exceptions\\BadAuthorizationException")

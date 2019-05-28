@@ -11,10 +11,14 @@ namespace Authorization\Ajax;
 
 class Authorization extends \Common\PageAjaxController
 {
+    /**
+     * @param string $username
+     * @param string $password
+     * @throws \Authorization\Exceptions\BadAuthorizationException
+     */
     public function login(string $username, string $password)
     {
-        $logged = \Authorization\Authorization::login($username, $password);
-        return $logged;
+        \Authorization\Authorization::login($username, $password);
     }
 
     public function logout()

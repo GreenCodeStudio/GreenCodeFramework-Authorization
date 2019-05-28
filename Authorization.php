@@ -15,6 +15,11 @@ class Authorization
     static private $userData = null;
     static private $userDataReaded = false;
 
+    /**
+     * @param string $username
+     * @param string $password
+     * @throws Exceptions\BadAuthorizationException
+     */
     static public function login(string $username, string $password)
     {
         $userDB = new \User\DB\UserDB();
@@ -69,6 +74,7 @@ class Authorization
     {
         if (!empty(self::getUserData()))
             return true;
+        else return false;
     }
 
     static public function getUserData()
