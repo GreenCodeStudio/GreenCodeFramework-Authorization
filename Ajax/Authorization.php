@@ -15,10 +15,12 @@ class Authorization extends \Common\PageAjaxController
     {
         $logged = \Authorization\Authorization::login($username, $password);
         return $logged;
-    }  public function logout()
-{
-     \Authorization\Authorization::logout();
-}
+    }
+
+    public function logout()
+    {
+        \Authorization\Authorization::logout();
+    }
 
     public function hasPermission()
     {

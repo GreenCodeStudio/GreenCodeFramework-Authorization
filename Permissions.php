@@ -22,7 +22,7 @@ class Permissions
 
     private function load(int $userId)
     {
-        $data = DB::get("SELECT * FROM user_permission up WHERE id_user = ?", [$userId]);
+        $data = DB::getArray("SELECT * FROM user_permission up WHERE id_user = ?", [$userId]);
         foreach ($data as $row) {
             $this->data[$row['group']][$row['name']] = 1;
         }
