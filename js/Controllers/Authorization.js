@@ -1,19 +1,19 @@
 import {Ajax} from "../../../Core/js/ajax";
+import {modal} from "../../../Common/js/modal";
 
 export default class {
     constructor(page, data) {
         page.querySelectorAll('.loginForm').forEach(x => x.addEventListener('submit', async e => {
             e.preventDefault();
             try {
-                var form = document.querySelector('.loginForm');
+                let form = page.querySelector('.loginForm');
                 await Ajax.Authorization.login(form.username.value, form.password.value);
                 document.location = '/';
             } catch (ex) {
                 if (ex.type === "Authorization\\Exceptions\\BadAuthorizationException")
-                    form.querySelector('.error').textContent = 'Zły login lub hasło';
+                    modal( 'Zły login lub hasło','error');
                 else
-                    form.querySelector('.error').textContent = 'Błąd';
-                form.querySelector('.error').classList.remove('hidden');
+                    modal( 'Wystąpił błąd','error');
             }
         }));
         page.querySelectorAll('.registerForm').forEach(x => x.addEventListener('submit', async e => {
