@@ -6,7 +6,7 @@ export default class {
         page.querySelectorAll('.loginForm').forEach(x => x.addEventListener('submit', async e => {
             e.preventDefault();
             try {
-                var form = document.querySelector('.loginForm');
+                let form = page.querySelector('.loginForm');
                 await Ajax.Authorization.login(form.username.value, form.password.value);
                 document.location = '/';
             } catch (ex) {

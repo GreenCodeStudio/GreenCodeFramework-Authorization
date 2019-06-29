@@ -22,20 +22,19 @@ class Authorization
      */
     static public function login(string $username, string $password)
     {
-        $userDB = new \User\DB\UserDB();
-        $userData = $userDB->getByUsername($username, true);
+        $userRepository = new \User\Repository\UserRepository();
+        $userData = $userRepository->getByUsername($username, true);
         if (!empty($userData)) {
             if (static::checkPassword($userData, $password)) {
                 unset($userData->salt);
                 unset($userData->password);
                 $token = static::generateToken();
-                $file = self::getUserFilePath($token, true);
+                $file = static::getUserFilePath($token, true);
                 $userData->permissions = new Permissions($userData->id);
                 file_put_contents($file, serialize($userData));
                 setcookie('login', $token, (int)(time() * 2), '/');
             } else {
                 throw new Exceptions\BadAuthorizationException();
-
             }
         } else {
             throw new Exceptions\BadAuthorizationException();
@@ -81,6 +80,7 @@ class Authorization
     {
         if (empty($_COOKIE['login']))
             return null;
+
         $token = $_COOKIE['login'];
         if (!self::$userDataReaded) {
             $path = self::getUserFilePath($token);
