@@ -26,13 +26,7 @@ class Authorization
         $userData = $userRepository->getByUsername($username, true);
         if (!empty($userData)) {
             if (static::checkPassword($userData, $password)) {
-                unset($userData->salt);
-                unset($userData->password);
-                $token = static::generateToken();
-                $file = static::getUserFilePath($token, true);
-                $userData->permissions = new Permissions($userData->id);
-                file_put_contents($file, serialize($userData));
-                setcookie('login', $token, (int)(time() * 2), '/');
+                self::executeLogin($userData);
             } else {
                 throw new Exceptions\BadAuthorizationException();
             }
@@ -51,6 +45,20 @@ class Authorization
         return hash('sha512', hash('sha512', $password).$salt.static::salt);
     }
 
+    /**
+     * @param $userData
+     */
+    public static function executeLogin($userData): void
+    {
+        unset($userData->salt);
+        unset($userData->password);
+        $token = static::generateToken();
+        $file = static::getUserFilePath($token, true);
+        $userData->permissions = new Permissions($userData->id);
+        file_put_contents($file, serialize($userData));
+        setcookie('login', $token, (int)(time() * 2), '/');
+    }
+
     private static function generateToken()
     {
         return bin2hex(openssl_random_pseudo_bytes(16));
@@ -62,6 +70,20 @@ class Authorization
         if ($mkdir && !is_dir($directory))
             mkdir($directory, 0777, true);
         return $directory.'/'.$token.'user';
+    }
+
+    static public function loginByToken(string $token)
+    {
+
+        dump($token);
+        $tokenRepository = new \User\Repository\TokenRepository();
+        $item = $tokenRepository->getTokenWithUser($token);
+        if (empty($item) || $item->type != 'login')
+            throw new \Exception('incorrect');
+        if (!empty($item->expire) && strtotime($item->expire) < time())
+            throw new \Exception('expired');
+        dump($item);
+        self::executeLogin($item->user);
     }
 
     public static function generateSalt()
