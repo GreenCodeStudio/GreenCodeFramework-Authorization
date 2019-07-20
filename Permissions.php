@@ -52,7 +52,7 @@ class Permissions
         foreach ($groups as $group) {
             $groupArray = (object)(array)$group;
             unset($groupArray->permission);
-            $groupArray->children = array_values($data[$group->name->__toString()]);
+            $groupArray->children = array_values($data[$group->name->__toString()]??[]);
             $ret[] = $groupArray;
         }
         return $ret;
