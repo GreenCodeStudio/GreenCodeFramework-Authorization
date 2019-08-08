@@ -1,5 +1,5 @@
 import {Ajax} from "../../../Core/js/ajax";
-import {modal} from "../../../Common/js/modal";
+import {modal} from "../../../CommonBase/js/modal";
 
 export default class {
     constructor(page, data) {
