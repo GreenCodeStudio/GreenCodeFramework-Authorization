@@ -1,20 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: matri
- * Date: 19.07.2018
- * Time: 13:40
- */
 
 namespace Authorization\Ajax;
 
 
-class Authorization extends \Common\PageAjaxController
+use Authorization\Exceptions\BadAuthorizationException;
+use Common\PageAjaxController;
+
+class Authorization extends PageAjaxController
 {
     /**
      * @param string $username
      * @param string $password
-     * @throws \Authorization\Exceptions\BadAuthorizationException
+     * @throws BadAuthorizationException
      */
     public function login(string $username, string $password)
     {

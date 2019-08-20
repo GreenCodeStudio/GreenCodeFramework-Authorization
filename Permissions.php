@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: matri
- * Date: 10.09.2018
- * Time: 18:30
- */
 
 namespace Authorization;
 
@@ -52,7 +46,7 @@ class Permissions
         foreach ($groups as $group) {
             $groupArray = (object)(array)$group;
             unset($groupArray->permission);
-            $groupArray->children = array_values($data[$group->name->__toString()]??[]);
+            $groupArray->children = array_values($data[$group->name->__toString()] ?? []);
             $ret[] = $groupArray;
         }
         return $ret;

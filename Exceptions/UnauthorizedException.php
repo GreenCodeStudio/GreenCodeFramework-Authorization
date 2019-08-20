@@ -2,7 +2,9 @@
 
 namespace Authorization\Exceptions;
 
-class UnauthorizedException extends \Exception
+use Exception;
+
+class UnauthorizedException extends Exception
 {
 
 }

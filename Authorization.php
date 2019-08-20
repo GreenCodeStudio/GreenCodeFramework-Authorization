@@ -9,6 +9,11 @@
 namespace Authorization;
 
 
+use Authorization\Exceptions\BadAuthorizationException;
+use Authorization\Exceptions\ExpiredTokenException;
+use User\Repository\TokenRepository;
+use User\Repository\UserRepository;
+
 class Authorization
 {
     const salt = 'l(vu$bL2';
@@ -22,7 +27,7 @@ class Authorization
      */
     static public function login(string $username, string $password)
     {
-        $userRepository = new \User\Repository\UserRepository();
+        $userRepository = new UserRepository();
         $userData = $userRepository->getByUsername($username, true);
         if (!empty($userData)) {
             if (static::checkPassword($userData, $password)) {
@@ -45,9 +50,6 @@ class Authorization
         return hash('sha512', hash('sha512', $password).$salt.static::salt);
     }
 
-    /**
-     * @param $userData
-     */
     public static function executeLogin($userData): void
     {
         unset($userData->salt);
@@ -72,17 +74,20 @@ class Authorization
         return $directory.'/'.$token.'user';
     }
 
+    /**
+     * @param string $token
+     * @throws BadAuthorizationException
+     * @throws ExpiredTokenException
+     */
     static public function loginByToken(string $token)
     {
 
-        dump($token);
-        $tokenRepository = new \User\Repository\TokenRepository();
+        $tokenRepository = new TokenRepository();
         $item = $tokenRepository->getTokenWithUser($token);
         if (empty($item) || $item->type != 'login')
-            throw new \Exception('incorrect');
+            throw new BadAuthorizationException();
         if (!empty($item->expire) && strtotime($item->expire) < time())
-            throw new \Exception('expired');
-        dump($item);
+            throw new ExpiredTokenException();
         self::executeLogin($item->user);
     }
 
