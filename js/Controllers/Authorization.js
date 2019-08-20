@@ -20,7 +20,7 @@ export default class {
             e.preventDefault();
             let form = document.querySelector('.registerForm');
             try {
-                let data = await Ajax.User.register(form.mail.value, form.password.value, form.password2.value);
+                await Ajax.User.register(form.mail.value, form.password.value, form.password2.value);
                 document.location = '/';
             } catch (ex) {
                 if (ex.type === "Authorization\\Exceptions\\BadAuthorizationException")
