@@ -3,7 +3,7 @@
 namespace Authorization;
 
 
-use Core\DB;
+use User\Repository\UserRepository;
 
 class Permissions
 {
@@ -11,15 +11,7 @@ class Permissions
 
     public function __construct(int $userId)
     {
-        $this->load($userId);
-    }
-
-    private function load(int $userId)
-    {
-        $data = DB::getArray("SELECT * FROM user_permission up WHERE id_user = ?", [$userId]);
-        foreach ($data as $row) {
-            $this->data[$row['group']][$row['name']] = 1;
-        }
+        $this->data = (new UserRepository())->getPermissions($userId);
     }
 
     static function readStructure()
@@ -56,5 +48,4 @@ class Permissions
     {
         return isset($this->data[$group]) && isset($this->data[$group][$permission]) && $this->data[$group][$permission];
     }
-
 }

@@ -18,7 +18,7 @@ class Authorization
 {
     const salt = 'l(vu$bL2';
     static private $userData = null;
-    static private $userDataReaded = false;
+    static private $isUserDataRead = false;
 
     /**
      * @param string $username
@@ -81,7 +81,6 @@ class Authorization
      */
     static public function loginByToken(string $token)
     {
-
         $tokenRepository = new TokenRepository();
         $item = $tokenRepository->getTokenWithUser($token);
         if (empty($item) || $item->type != 'login')
@@ -105,17 +104,17 @@ class Authorization
 
     static public function getUserData()
     {
-        if (empty($_COOKIE['login']))
-            return null;
+        if (!self::$isUserDataRead) {
+            if (empty($_COOKIE['login']))
+                return null;
 
-        $token = $_COOKIE['login'];
-        if (!self::$userDataReaded) {
+            $token = $_COOKIE['login'];
             $path = self::getUserFilePath($token);
             if (file_exists($path))
                 self::$userData = unserialize(file_get_contents($path));
             else
                 self::$userData = null;
-            self::$userDataReaded = true;
+            self::$isUserDataRead = true;
         }
         return self::$userData;
     }
@@ -126,6 +125,8 @@ class Authorization
             $token = $_COOKIE['login'];
             unlink(self::getUserFilePath($token));
         }
+        self::$userData = null;
+        self::$isUserDataRead = true;
         setcookie('login', NULL, 0, '/');
     }
 }
