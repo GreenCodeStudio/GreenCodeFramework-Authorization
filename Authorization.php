@@ -119,6 +119,11 @@ class Authorization
         return self::$userData;
     }
 
+    static public function getUserId()
+    {
+        return self::getUserData()->id;
+    }
+
     public static function logout()
     {
         if (!empty($_COOKIE['login'])) {
