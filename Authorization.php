@@ -21,8 +21,6 @@ class Authorization
     static private $isUserDataRead = false;
 
     /**
-     * @param string $username
-     * @param string $password
      * @throws Exceptions\BadAuthorizationException
      */
     static public function login(string $username, string $password)
@@ -30,7 +28,7 @@ class Authorization
         $userRepository = new UserRepository();
         $userData = $userRepository->getByUsername($username, true);
         if (!empty($userData)) {
-            if (static::checkPassword($userData, $password)) {
+            if (self::checkPassword($userData, $password)) {
                 self::executeLogin($userData);
             } else {
                 throw new Exceptions\BadAuthorizationException();
@@ -75,7 +73,6 @@ class Authorization
     }
 
     /**
-     * @param string $token
      * @throws BadAuthorizationException
      * @throws ExpiredTokenException
      */
@@ -97,9 +94,7 @@ class Authorization
 
     static public function isLogged()
     {
-        if (!empty(self::getUserData()))
-            return true;
-        else return false;
+        return !empty(self::getUserData());
     }
 
     static public function getUserData()

@@ -9,8 +9,6 @@ use Common\PageAjaxController;
 class Authorization extends PageAjaxController
 {
     /**
-     * @param string $username
-     * @param string $password
      * @throws BadAuthorizationException
      */
     public function login(string $username, string $password)
