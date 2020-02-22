@@ -3,6 +3,7 @@
 namespace Authorization;
 
 
+use MKrawczyk\FunQuery\FunQuery;
 use User\Repository\UserRepository;
 
 class Permissions
@@ -34,14 +35,12 @@ class Permissions
                 }
             }
         }
-        $ret = [];
-        foreach ($groups as $group) {
+        return FunQuery::create($groups)->map(function ($group) {
             $groupArray = (object)(array)$group;
             unset($groupArray->permission);
             $groupArray->children = array_values($data[$group->name->__toString()] ?? []);
-            $ret[] = $groupArray;
-        }
-        return $ret;
+            return $groupArray;
+        })->toArray();
     }
 
     public function can(string $group, string $permission)
