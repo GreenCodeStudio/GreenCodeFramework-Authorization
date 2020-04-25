@@ -11,6 +11,7 @@ namespace Authorization;
 
 use Authorization\Exceptions\BadAuthorizationException;
 use Authorization\Exceptions\ExpiredTokenException;
+use Authorization\Repository\AuthorizationRepository;
 use User\Repository\TokenRepository;
 use User\Repository\UserRepository;
 
@@ -53,23 +54,14 @@ class Authorization
         unset($userData->salt);
         unset($userData->password);
         $token = static::generateToken();
-        $file = static::getUserFilePath($token, true);
         $userData->permissions = new Permissions($userData->id);
-        file_put_contents($file, serialize($userData));
+        (new AuthorizationRepository())->Insert($token, $userData);
         setcookie('login', $token, (int)(time() * 2), '/');
     }
 
     private static function generateToken()
     {
         return bin2hex(openssl_random_pseudo_bytes(16));
-    }
-
-    private static function getUserFilePath($token, bool $mkdir = false)
-    {
-        $directory = __DIR__.'/../../tmp';
-        if ($mkdir && !is_dir($directory))
-            mkdir($directory, 0777, true);
-        return $directory.'/'.$token.'user';
     }
 
     /**
@@ -104,11 +96,7 @@ class Authorization
                 return null;
 
             $token = $_COOKIE['login'];
-            $path = self::getUserFilePath($token);
-            if (file_exists($path))
-                self::$userData = unserialize(file_get_contents($path));
-            else
-                self::$userData = null;
+            self::$userData = (new AuthorizationRepository())->Get($token);
             self::$isUserDataRead = true;
         }
         return self::$userData;
@@ -123,7 +111,7 @@ class Authorization
     {
         if (!empty($_COOKIE['login'])) {
             $token = $_COOKIE['login'];
-            unlink(self::getUserFilePath($token));
+            (new AuthorizationRepository())->Delete($token);
         }
         self::$userData = null;
         self::$isUserDataRead = true;
