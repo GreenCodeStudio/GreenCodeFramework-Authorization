@@ -35,7 +35,7 @@ class Permissions
                 }
             }
         }
-        return FunQuery::create($groups)->map(function ($group) {
+        return FunQuery::create($groups)->map(function ($group) use ($data) {
             $groupArray = (object)(array)$group;
             unset($groupArray->permission);
             $groupArray->children = array_values($data[$group->name->__toString()] ?? []);
