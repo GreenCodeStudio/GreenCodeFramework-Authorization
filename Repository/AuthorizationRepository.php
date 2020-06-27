@@ -4,7 +4,7 @@
 namespace Authorization\Repository;
 
 
-use Core\MiniDB;
+use Core\Database\MiniDB;
 
 class AuthorizationRepository
 {
