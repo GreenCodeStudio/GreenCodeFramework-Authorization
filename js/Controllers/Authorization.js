@@ -1,5 +1,7 @@
 import {Ajax} from "../../../Core/js/ajax";
 import {modal} from "../../../Core/js/modal";
+import facebook from "../facebook";
+import {t} from "../../i18n.xml"
 
 export default class {
     constructor(page, data) {
@@ -11,9 +13,9 @@ export default class {
                 document.location = '/';
             } catch (ex) {
                 if (ex.type === "Authorization\\Exceptions\\BadAuthorizationException")
-                    modal('Zły login lub hasło', 'error');
+                    modal(t('badLoginOrPassword'), 'error');
                 else
-                    modal('Wystąpił błąd', 'error');
+                    modal(t('errorOccured'), 'error');
             }
         }));
         page.querySelectorAll('.registerForm').forEach(x => x.addEventListener('submit', async e => {
@@ -23,10 +25,12 @@ export default class {
                 await Ajax.User.register(form.mail.value, form.password.value, form.password2.value);
                 document.location = '/';
             } catch (ex) {
-                if (ex.type === "Authorization\\Exceptions\\BadAuthorizationException")
-                    form.querySelector('.error').textContent = 'Zły login lub hasło';
+                if (ex.type === "User\\Exceptions\\PasswordsNotEqualException")
+                    form.querySelector('.error').textContent = t('PasswordsNotEqual');
+                else if (ex.type === "User\\Exceptions\\UserExistsException")
+                    form.querySelector('.error').textContent = t('UserExists');
                 else
-                    form.querySelector('.error').textContent = 'Błąd';
+                    form.querySelector('.error').textContent = t('errorOccured');
                 form.querySelector('.error').classList.remove('hidden');
             }
         }));
@@ -37,5 +41,6 @@ export default class {
             else
                 e.target.classList.add('notEmpty');
         }));
+        page.querySelectorAll('.loginByFacebook').forEach(x=>x.onclick=()=>facebook.startLogin());
     }
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+    <node name="badLoginOrPassword">
+        <value lang="pl">Zły email lub hasło</value>
+        <value lang="en">Bad mail or password</value>
+    </node>
+    <node name="errorOccured">
+        <value lang="pl">Wystapił błąd</value>
+        <value lang="en">An error occured</value>
+    </node>
+    <node name="PasswordsNotEqual">
+        <value lang="pl">Hasła nie są takie same</value>
+        <value lang="en">Passwords aren't equal</value>
+    </node>
+    <node name="UserExists">
+        <value lang="pl">Użytkownik już istnieje</value>
+        <value lang="en">User already exists</value>
+    </node>
+</root>
