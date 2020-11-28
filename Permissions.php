@@ -47,4 +47,7 @@ class Permissions
     {
         return isset($this->data[$group]) && isset($this->data[$group][$permission]) && $this->data[$group][$permission];
     }
+    public function getAsArray(){
+        return $this->data;
+    }
 }
