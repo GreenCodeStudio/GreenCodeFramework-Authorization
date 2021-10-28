@@ -21,7 +21,7 @@ class Authorization extends PageAjaxController
         \Authorization\Authorization::logout();
     }
 
-    public function hasPermission()
+    public function hasPermission(string $method)
     {
         return true;
     }
