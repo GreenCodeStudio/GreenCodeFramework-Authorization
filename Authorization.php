@@ -46,7 +46,7 @@ class Authorization
 
     public static function hashPassword(string $password, string $salt)
     {
-        return hash('sha512', hash('sha512', $password).$salt.static::salt);
+        return hash('sha512', hash('sha512', $password) . $salt . static::salt);
     }
 
     public static function executeLogin($userData): void
@@ -55,7 +55,7 @@ class Authorization
         unset($userData->password);
         $token = static::generateToken();
         $userData->permissions = new Permissions($userData->id);
-        (new AuthorizationRepository())->Insert($token, $userData);
+        (new AuthorizationRepository(getenv('host') ?? $_SERVER['HTTP_HOST']))->Insert($token, $userData);
         setcookie('login', $token, (int)(time() * 2), '/');
     }
 
@@ -96,7 +96,7 @@ class Authorization
                 return null;
 
             $token = $_COOKIE['login'];
-            self::$userData = (new AuthorizationRepository())->Get($token);
+            self::$userData = (new AuthorizationRepository(getenv('host') ?? $_SERVER['HTTP_HOST']))->Get($token);
             self::$isUserDataRead = true;
         }
         return self::$userData;
@@ -111,10 +111,23 @@ class Authorization
     {
         if (!empty($_COOKIE['login'])) {
             $token = $_COOKIE['login'];
-            (new AuthorizationRepository())->Delete($token);
+            (new AuthorizationRepository(getenv('host') ?? $_SERVER['HTTP_HOST']))->Delete($token);
         }
         self::$userData = null;
         self::$isUserDataRead = true;
         setcookie('login', NULL, 0, '/');
+    }
+
+    public function refreshUserData()
+    {
+        $userRepository = new UserRepository();
+        $authorizationRepository = new AuthorizationRepository(getenv('host') ?? $_SERVER['HTTP_HOST']);
+        $users = $authorizationRepository->GetAll();
+        foreach ($users as $user) {
+            $userData = $userRepository->getById($user->id, true);
+            $userData->permissions = new Permissions($user->id);
+            $authorizationRepository->Update($user->token, $userData);
+            dump($user);
+        }
     }
 }
