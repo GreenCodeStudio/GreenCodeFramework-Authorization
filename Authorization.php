@@ -115,7 +115,7 @@ class Authorization
         }
         self::$userData = null;
         self::$isUserDataRead = true;
-        setcookie('login', NULL, 0, '/');
+        setcookie('login', '', 0, '/');
     }
 
     public function refreshUserData()
