@@ -55,7 +55,7 @@ class Authorization
         unset($userData->password);
         $token = static::generateToken();
         $userData->permissions = new Permissions($userData->id);
-        (new AuthorizationRepository(getenv('host') ?? $_SERVER['HTTP_HOST']))->Insert($token, $userData);
+        (new AuthorizationRepository($_ENV['host'] ?? $_SERVER['HTTP_HOST']))->Insert($token, $userData);
         setcookie('login', $token, (int)(time() * 2), '/');
     }
 
@@ -96,7 +96,7 @@ class Authorization
                 return null;
 
             $token = $_COOKIE['login'];
-            self::$userData = (new AuthorizationRepository(getenv('host') ?? $_SERVER['HTTP_HOST']))->Get($token);
+            self::$userData = (new AuthorizationRepository($_ENV['host'] ?? $_SERVER['HTTP_HOST']))->Get($token);
             self::$isUserDataRead = true;
         }
         return self::$userData;
@@ -111,7 +111,7 @@ class Authorization
     {
         if (!empty($_COOKIE['login'])) {
             $token = $_COOKIE['login'];
-            (new AuthorizationRepository(getenv('host') ?? $_SERVER['HTTP_HOST']))->Delete($token);
+            (new AuthorizationRepository($_ENV['host'] ?? $_SERVER['HTTP_HOST']))->Delete($token);
         }
         self::$userData = null;
         self::$isUserDataRead = true;
@@ -121,7 +121,7 @@ class Authorization
     public function refreshUserData()
     {
         $userRepository = new UserRepository();
-        $authorizationRepository = new AuthorizationRepository(getenv('host') ?? $_SERVER['HTTP_HOST']);
+        $authorizationRepository = new AuthorizationRepository($_ENV['host'] ?? $_SERVER['HTTP_HOST']);
         $users = $authorizationRepository->GetAll();
         foreach ($users as $user) {
             $userData = $userRepository->getById($user->id, true);
