@@ -121,7 +121,7 @@ class Authorization
     public function refreshUserData()
     {
         $userRepository = new UserRepository();
-        $authorizationRepository = new AuthorizationRepository($_ENV['host'] ?? $_SERVER['HTTP_HOST']);
+        $authorizationRepository = new AuthorizationRepository($_ENV['host'] ?? $_SERVER['HTTP_HOST']??'unknown');
         $users = $authorizationRepository->GetAll();
         foreach ($users as $user) {
             $userData = $userRepository->getById($user->id, true);
