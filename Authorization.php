@@ -14,6 +14,7 @@ use Authorization\Exceptions\ExpiredTokenException;
 use Authorization\Repository\AuthorizationRepository;
 use User\Repository\TokenRepository;
 use User\Repository\UserRepository;
+use User\UserPreferences;
 
 class Authorization
 {
@@ -55,6 +56,7 @@ class Authorization
         unset($userData->password);
         $token = static::generateToken();
         $userData->permissions = new Permissions($userData->id);
+        $userData->preferences=(new UserPreferences())->getByUserIdShort($userData->id);
         (new AuthorizationRepository($_ENV['host'] ?? $_SERVER['HTTP_HOST']))->Insert($token, $userData);
         setcookie('login', $token, (int)(time() * 2), '/');
     }
