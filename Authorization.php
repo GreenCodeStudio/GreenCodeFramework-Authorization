@@ -128,6 +128,7 @@ class Authorization
         foreach ($users as $user) {
             $userData = $userRepository->getById($user->id, true);
             $userData->permissions = new Permissions($user->id);
+            $userData->preferences=(new UserPreferences())->getByUserIdShort($user->id);
             $authorizationRepository->Update($user->token, $userData);
             dump($user);
         }
