@@ -50,6 +50,22 @@ export default class {
                 let form = page.querySelector('.resetPasswordForm');
                 await Ajax.Authorization.resetPassword(form.username.value);
                 await modal(t('passwordResetInfo'), 'info');
+                document.location = '/Authorization/resetPassword2/' + encodeURIComponent(form.username.value);
+            } catch (ex) {
+                modal(t('errorOccured'), 'error');
+            }
+        }));
+        page.querySelectorAll('.resetPasswordForm2').forEach(x => x.addEventListener('submit', async e => {
+            e.preventDefault();
+            try {
+                let form = page.querySelector('.resetPasswordForm2');
+                if(form.password.value !== form.password2.value){
+                    modal(t('PasswordsNotEqual'), 'error');
+                    return;
+                }
+                await Ajax.Authorization.resetPassword2(form.username.value, form.code.value, form.password.value);
+                await modal(t('passwordResetInfo2'), 'info');
+                document.location = '/';
             } catch (ex) {
                 modal(t('errorOccured'), 'error');
             }

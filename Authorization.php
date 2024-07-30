@@ -9,11 +9,13 @@
 namespace Authorization;
 
 
+use _PHPStan_27631a2e0\Nette\Neon\Exception;
 use Authorization\Exceptions\BadAuthorizationException;
 use Authorization\Exceptions\ExpiredTokenException;
 use Authorization\Repository\AuthorizationRepository;
 use User\Repository\TokenRepository;
 use User\Repository\UserRepository;
+use User\User;
 use User\UserPreferences;
 
 class Authorization
@@ -120,14 +122,35 @@ class Authorization
         setcookie('login', '', 0, '/');
     }
 
-    public static function resetPassword(string $username)
+    public static function resetPassword(string $mailAddress)
     {
         $mail = new \Core\MailSender();
-        $mail->AddAddress($username);
         $mail->Subject = 'Resetowanie hasła';
-        $mail->Body = 'Kliknij w link, aby zresetować hasło: <a href="http://'.$_SERVER['HTTP_HOST'].'/resetPassword?token='.self::generateToken().'">Resetuj hasło</a>';
+        $user= (new UserRepository())->getByUsername($mailAddress);
+        if(empty($user))
+            return;
+        $mail->AddAddress($user->mail);
+        $code=rand(100000,999999);
+        $expiration = new \DateTime();
+        $expiration->add(new \DateInterval('PT1H'));
+        (new UserRepository())->setResetPasswordCode($user->id, $code, $expiration);
+        $link = 'http://'.$_SERVER['HTTP_HOST'].'/Authorization/resetPassword2/'.urlencode($user->mail).'/'.$code;
+        $mail->Body = 'Kod do resetowania hasła: <strong>'.$code.'</strong><br><br>Alternatywnie możesz kliknąć w link <a href="'.htmlspecialchars($link).'">'.htmlspecialchars($link).'</a>';
         $mail->Send();
     }
+    public static function resetPassword2(string $mailAddress, int $code, string $newPassword){
+
+        $user= (new UserRepository())->getByUsernameForPasswordReset($mailAddress);
+        if(empty($user))
+            throw new Exception();
+        if($user->reset_password_code !== $code)
+            throw new Exception();
+        if($user->reset_password_expire <(new \DateTime())->format('Y-m-d H:i:s'))
+            throw new Exception();
+
+        (new User())->changePassword($user->id, $newPassword);
+}
+
 
     public function refreshUserData()
     {

@@ -20,4 +20,9 @@
         <value lang="pl">Jeżeli podany adres istnieje w bazie danych to został na niego wysłany kod potwierdzający</value>
         <value lang="en">If the given address exists in the database, a confirmation code has been sent to it</value>
     </node>
+
+    <node name="passwordResetInfo2">
+        <value lang="pl">Hasło zmienione, możesz się zalogować</value>
+        <value lang="en">Password changed, you can log in</value>
+    </node>
 </root>
