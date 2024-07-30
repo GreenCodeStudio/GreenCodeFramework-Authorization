@@ -130,6 +130,7 @@ class Authorization
         if(empty($user))
             return;
         $mail->AddAddress($user->mail);
+        $mail->isHTML(true);
         $code=rand(100000,999999);
         $expiration = new \DateTime();
         $expiration->add(new \DateInterval('PT1H'));
