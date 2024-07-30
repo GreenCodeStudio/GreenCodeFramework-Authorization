@@ -20,6 +20,10 @@ class Authorization extends PageAjaxController
     {
         \Authorization\Authorization::logout();
     }
+    public function resetPassword(string $username)
+    {
+        \Authorization\Authorization::resetPassword($username);
+    }
 
     public function hasPermission(string $methodName)
     {

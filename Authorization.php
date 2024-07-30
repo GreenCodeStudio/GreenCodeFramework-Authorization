@@ -47,7 +47,7 @@ class Authorization
 
     public static function hashPassword(string $password, string $salt)
     {
-        return hash('sha512', hash('sha512', $password) . $salt . static::salt);
+        return hash('sha512', hash('sha512', $password).$salt.static::salt);
     }
 
     public static function executeLogin($userData): void
@@ -56,7 +56,7 @@ class Authorization
         unset($userData->password);
         $token = static::generateToken();
         $userData->permissions = new Permissions($userData->id);
-        $userData->preferences=(new UserPreferences())->getByUserIdShort($userData->id);
+        $userData->preferences = (new UserPreferences())->getByUserIdShort($userData->id);
         (new AuthorizationRepository($_ENV['host'] ?? $_SERVER['HTTP_HOST']))->Insert($token, $userData);
         setcookie('login', $token, (int)(time() * 2), '/');
     }
@@ -120,6 +120,15 @@ class Authorization
         setcookie('login', '', 0, '/');
     }
 
+    public static function resetPassword(string $username)
+    {
+        $mail = new \Core\MailSender();
+        $mail->AddAddress($username);
+        $mail->Subject = 'Resetowanie hasła';
+        $mail->Body = 'Kliknij w link, aby zresetować hasło: <a href="http://'.$_SERVER['HTTP_HOST'].'/resetPassword?token='.self::generateToken().'">Resetuj hasło</a>';
+        $mail->Send();
+    }
+
     public function refreshUserData()
     {
         $userRepository = new UserRepository();
@@ -128,7 +137,7 @@ class Authorization
         foreach ($users as $user) {
             $userData = $userRepository->getById($user->id, true);
             $userData->permissions = new Permissions($user->id);
-            $userData->preferences=(new UserPreferences())->getByUserIdShort($user->id);
+            $userData->preferences = (new UserPreferences())->getByUserIdShort($user->id);
             $authorizationRepository->Update($user->token, $userData);
             dump($user);
         }

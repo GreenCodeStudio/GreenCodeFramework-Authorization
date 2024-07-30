@@ -41,6 +41,18 @@ export default class {
             else
                 e.target.classList.add('notEmpty');
         }));
-        page.querySelectorAll('.loginByFacebook').forEach(x=>x.onclick=()=>facebook.startLogin());
+        page.querySelectorAll('.loginByFacebook').forEach(x => x.onclick = () => facebook.startLogin());
+
+
+        page.querySelectorAll('.resetPasswordForm').forEach(x => x.addEventListener('submit', async e => {
+            e.preventDefault();
+            try {
+                let form = page.querySelector('.resetPasswordForm');
+                await Ajax.Authorization.resetPassword(form.username.value);
+                await modal(t('passwordResetInfo'), 'info');
+            } catch (ex) {
+                modal(t('errorOccured'), 'error');
+            }
+        }));
     }
 }

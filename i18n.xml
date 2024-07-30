@@ -16,4 +16,8 @@
         <value lang="pl">Użytkownik już istnieje</value>
         <value lang="en">User already exists</value>
     </node>
+    <node name="passwordResetInfo">
+        <value lang="pl">Jeżeli podany adres istnieje w bazie danych to został na niego wysłany kod potwierdzający</value>
+        <value lang="en">If the given address exists in the database, a confirmation code has been sent to it</value>
+    </node>
 </root>
