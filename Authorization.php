@@ -8,12 +8,10 @@
 
 namespace Authorization;
 
-
-use _PHPStan_27631a2e0\Nette\Neon\Exception;
 use Authorization\Exceptions\BadAuthorizationException;
 use Authorization\Exceptions\ExpiredTokenException;
 use Authorization\Repository\AuthorizationRepository;
-use User\Repository\TokenRepository;
+use Exception;
 use User\Repository\UserRepository;
 use User\User;
 use User\UserPreferences;
@@ -66,21 +64,6 @@ class Authorization
     private static function generateToken()
     {
         return bin2hex(openssl_random_pseudo_bytes(16));
-    }
-
-    /**
-     * @throws BadAuthorizationException
-     * @throws ExpiredTokenException
-     */
-    static public function loginByToken(string $token)
-    {
-        $tokenRepository = new TokenRepository();
-        $item = $tokenRepository->getTokenWithUser($token);
-        if (empty($item) || $item->type != 'login')
-            throw new BadAuthorizationException();
-        if (!empty($item->expire) && strtotime($item->expire) < time())
-            throw new ExpiredTokenException();
-        self::executeLogin($item->user);
     }
 
     public static function generateSalt()
