@@ -8,6 +8,8 @@ use Core\Database\MiniDB;
 
 class AuthorizationRepository
 {
+    private string $host;
+
     public function __construct(string $host)
     {
         $this->host = $host;
