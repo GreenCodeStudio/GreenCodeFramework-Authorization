@@ -56,9 +56,16 @@ class Authorization
         unset($userData->password);
         $token = static::generateToken();
         $userData->permissions = new Permissions($userData->id);
-        $userData->preferences=(new UserPreferences())->getByUserIdShort($userData->id);
+        $userData->preferences = (new UserPreferences())->getByUserIdShort($userData->id);
         (new AuthorizationRepository($_ENV['host'] ?? $_SERVER['HTTP_HOST']))->Insert($token, $userData);
-        setcookie('login', $token, (int)(time() * 2), '/');
+        $isCordova = isset($_GET['cordova']) || (isset($_COOKIE['cordova']) && $_COOKIE['cordova'] == 1);
+        setcookie('login', $token,
+            ['expires' => (int)(time() * 2),
+                'path' => '/',
+                'secure' => true,
+                'samesite' => $isCordova ? 'None' : 'Strict',
+            ]);
+
     }
 
     private static function generateToken()
@@ -123,14 +130,14 @@ class Authorization
     public function refreshUserData()
     {
         $userRepository = new UserRepository();
-        $authorizationRepository = new AuthorizationRepository($_ENV['host'] ?? $_SERVER['HTTP_HOST']??'unknown');
+        $authorizationRepository = new AuthorizationRepository($_ENV['host'] ?? $_SERVER['HTTP_HOST'] ?? 'unknown');
         $users = $authorizationRepository->GetAll();
         foreach ($users as $user) {
             $userData = $userRepository->getById($user->id, true);
-            if(empty($userData))
+            if (empty($userData))
                 continue;
             $userData->permissions = new Permissions($user->id);
-            $userData->preferences=(new UserPreferences())->getByUserIdShort($user->id);
+            $userData->preferences = (new UserPreferences())->getByUserIdShort($user->id);
             $authorizationRepository->Update($user->token, $userData);
         }
     }
