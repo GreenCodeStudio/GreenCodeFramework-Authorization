@@ -63,7 +63,8 @@ class Authorization
             ['expires' => (int)(time() * 2),
                 'path' => '/',
                 'secure' => true,
-                'samesite' => $isCordova ? 'None' : 'Strict',
+//                'samesite' => $isCordova ? 'None' : 'Strict',
+                'samesite' => 'None' ,//temporary
             ]);
 
     }
