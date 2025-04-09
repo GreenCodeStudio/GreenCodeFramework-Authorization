@@ -59,14 +59,17 @@ class Authorization
         $userData->preferences = (new UserPreferences())->getByUserIdShort($userData->id);
         (new AuthorizationRepository($_ENV['host'] ?? $_SERVER['HTTP_HOST']))->Insert($token, $userData);
         $isCordova = isset($_GET['cordova']) || (isset($_COOKIE['cordova']) && $_COOKIE['cordova'] == 1);
-        setcookie('login', $token,
-            ['expires' => (int)(time() * 2),
-                'path' => '/',
-                'secure' => $_SERVER['SERVER_PORT'] == 443,//only true on https
+        if ($_SERVER['SERVER_PORT'] == 443) {
+            setcookie('login', $token,
+                ['expires' => (int)(time() * 2),
+                    'path' => '/',
+                    'secure' => $_SERVER['SERVER_PORT'] == 443,//only true on https
 //                'samesite' => $isCordova ? 'None' : 'Strict',
-                'samesite' => 'None' ,//temporary
-            ]);
-
+                    'samesite' => 'None',//temporary
+                ]);
+        } else {
+            setcookie('login', $token, (int)(time() * 2), '/');
+        }
     }
 
     private static function generateToken()
