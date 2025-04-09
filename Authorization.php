@@ -62,7 +62,7 @@ class Authorization
         setcookie('login', $token,
             ['expires' => (int)(time() * 2),
                 'path' => '/',
-                'secure' => true,
+                'secure' => $_SERVER['SERVER_PORT'] == 443,//only true on https
 //                'samesite' => $isCordova ? 'None' : 'Strict',
                 'samesite' => 'None' ,//temporary
             ]);
