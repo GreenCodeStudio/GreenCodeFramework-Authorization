@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <root>
     <node name="badLoginOrPassword">
-        <value lang="pl">Zły email lub hasło</value>
-        <value lang="en">Bad mail or password</value>
+        <value lang="pl">Nieprawidłowy email lub hasło</value>
+        <value lang="en">Wrong email or password</value>
     </node>
     <node name="errorOccured">
         <value lang="pl">Wystapił błąd</value>
