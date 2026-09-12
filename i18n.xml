@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <root>
     <node name="badLoginOrPassword">
-        <value lang="pl">Zły email lub hasło</value>
-        <value lang="en">Bad mail or password</value>
+        <value lang="pl">Nieprawidłowy email lub hasło</value>
+        <value lang="en">Wrong email or password</value>
     </node>
     <node name="errorOccured">
         <value lang="pl">Wystapił błąd</value>
@@ -15,5 +15,14 @@
     <node name="UserExists">
         <value lang="pl">Użytkownik już istnieje</value>
         <value lang="en">User already exists</value>
+    </node>
+    <node name="passwordResetInfo">
+        <value lang="pl">Jeżeli podany adres istnieje w bazie danych to został na niego wysłany kod potwierdzający</value>
+        <value lang="en">If the given address exists in the database, a confirmation code has been sent to it</value>
+    </node>
+
+    <node name="passwordResetInfo2">
+        <value lang="pl">Hasło zmienione, możesz się zalogować</value>
+        <value lang="en">Password changed, you can log in</value>
     </node>
 </root>
