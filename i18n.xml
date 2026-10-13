@@ -3,26 +3,44 @@
     <node name="badLoginOrPassword">
         <value lang="pl">Nieprawidłowy email lub hasło</value>
         <value lang="en">Wrong email or password</value>
+        <value lang="de">Falsche E-Mail oder Passwort</value>
+        <value lang="cs">Špatný e-mail nebo heslo</value>
+        <value lang="ua">Неправильний email або пароль</value>
     </node>
     <node name="errorOccured">
         <value lang="pl">Wystapił błąd</value>
         <value lang="en">An error occured</value>
+        <value lang="de">Ein Fehler ist aufgetreten</value>
+        <value lang="cs">Došlo k chybě</value>
+        <value lang="ua">Виникла помилка</value>
     </node>
     <node name="PasswordsNotEqual">
         <value lang="pl">Hasła nie są takie same</value>
         <value lang="en">Passwords aren't equal</value>
+        <value lang="de">Passwörter sind nicht gleich</value>
+        <value lang="cs">Hesla nejsou stejná</value>
+        <value lang="ua">Паролі не збігаються</value>
     </node>
     <node name="UserExists">
         <value lang="pl">Użytkownik już istnieje</value>
         <value lang="en">User already exists</value>
+        <value lang="de">Benutzer existiert bereits</value>
+        <value lang="cs">Uživatel již existuje</value>
+        <value lang="ua">Користувач вже існує</value>
     </node>
     <node name="passwordResetInfo">
         <value lang="pl">Jeżeli podany adres istnieje w bazie danych to został na niego wysłany kod potwierdzający</value>
         <value lang="en">If the given address exists in the database, a confirmation code has been sent to it</value>
+        <value lang="de">Wenn die angegebene Adresse in der Datenbank existiert, wurde ein Bestätigungscode an sie gesendet</value>
+        <value lang="cs">Pokud zadaná adresa existuje v databázi, byl na ni odeslán potvrzovací kód</value>
+        <value lang="ua">Якщо вказана адреса існує в базі даних, на неї було надіслано код підтвердження</value>
     </node>
 
     <node name="passwordResetInfo2">
         <value lang="pl">Hasło zmienione, możesz się zalogować</value>
         <value lang="en">Password changed, you can log in</value>
+        <value lang="de">Passwort geändert, Sie können sich anmelden</value>
+        <value lang="cs">Heslo změněno, můžete se přihlásit</value>
+        <value lang="ua">Пароль змінено, ви можете увійти</value>
     </node>
 </root>
